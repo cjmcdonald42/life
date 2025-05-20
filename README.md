@@ -27,6 +27,6 @@ I've used this program as a learning exercise to practice Python programming. I'
 ## References
 1. [John Conway's Game of Life](https://playgameoflife.com)
 2. Tech with Tim «https://github.com/techwithtim» "Python Simulation Tutorial - Conway's Game of Life"
-(GitHub)[https://github.com/techwithtim/Conways-Game-Of-Life], (YouTube)[https://www.youtube.com/watch?v=YDKuknw9WGs]
+[GitHub](https://github.com/techwithtim/Conways-Game-Of-Life), [YouTube](https://www.youtube.com/watch?v=YDKuknw9WGs)
 
 ### This work © 2025 by Charles J McDonald is licensed under CC BY-NC-SA 4.0
