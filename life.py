@@ -26,6 +26,7 @@ GRID_WIDTH = WIDTH // TILE_SIZE
 GRID_HEIGHT = HEIGHT // TILE_SIZE
 
 FPS = 60
+UPDATE_FREQ = 120                                       # Update every 2 clock cycles
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
@@ -45,6 +46,9 @@ def draw_grid(positions):
     Draws the grid in the game window.
     (0,0) is the top left corner of the grid. X and Y increase as you go down and to the right.
     positions are col, row
+
+    :param positions: set of positions to draw
+    :return: None
     """
 
     for position in positions:
@@ -72,11 +76,11 @@ def adjust_grid(positions):
         neighbours = get_neighbours(position)           # set eliminates duplicates
         all_neighbours.update(neighbours)
 
-        neighbours = list(filter(Lambda x: x in positions, neighbours))
+        neighbours = list(filter(lambda x: x in positions, neighbours))
 
         if len(neighbours) in [2, 3]:                   # if an active cell has 2 or 3 neighbours, it remains active
             new_positions.add(position)
-            # implicit: if we don't add the pos to the new list, it goes inactive
+                                                        # implicit: if we don't add the pos to the new list, it goes inactive
 
     for position in all_neighbours:                     # consider the position of all active neighbours
         neighbours = get_neighbours(position)
@@ -90,7 +94,8 @@ def adjust_grid(positions):
 
 def get_neighbours(pos):
     """
-    Retrieve the 8 neighbours of pos
+    Retrieve the 8 neighbours of pos.
+    Note: the tutorial uses continue statements which I have removed by inverting the logic.
 
     :param pos: current position
     :return: number of neighbours
@@ -99,61 +104,62 @@ def get_neighbours(pos):
     x, y = pos
     neighbours = []
     for dx in [-1, 0, 1]:                               # consider displacement of x and y to the 8 surrounding pos
-        for dy in [-1, 0, 1]:
-            if not (dx == dy == 0):                     # skip the middle position
-                neighbours.append((x + dx, y + dy))     # active neighbours
+        if not (x + dx < 0 or x + x + dx > GRID_WIDTH):         # Check that x-pos is on the grid
+            for dy in [-1, 0, 1]:
+                if not (y + dy <0 or y + dy > GRID_HEIGHT):     # Check that y-pos is on the grid
+                    if not (dx == dy == 0):                     # skip the middle position
+                        neighbours.append((x + dx, y + dy))     # active neighbours
+    return neighbours
 
 
-def main():
-    """
-    Main game loop
-    """
+is_running = True                                   # Boolean switches us is_(verb)
+is_playing = False
+count = 0
 
-    is_running = True
-    is_playing = False
-    positions = set()
+positions = set()
 
-    while is_running:
-        clock.tick(FPS)                                 # Limit the game loop by limiting the frame rate to FPS
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                is_running = False                      # Exit the game loop when the grid window is closed
+while is_running:
+    clock.tick(FPS)                                 # Limit the game loop by limiting the frame rate to FPS
+    if is_playing:                                  # Count the clock cycles, FPS is the limit
+        count += 1
 
-            if event.type == pygame.MOUSEBUTTONDOWN:    # Set or unset a tile at the press of any mouse button
-                x, y = pygame.mouse.get_pos()
-                col = x // TILE_SIZE
-                row = y // TILE_SIZE
-                pos = (col, row)
+    if count >= UPDATE_FREQ:                        # When clock exceeds update frequency, redraw the board
+        count = 0
+        positions = adjust_grid(positions)
 
-                if pos in positions:
-                    positions.remove(pos)
-                else:
-                    positions.add(pos)
+    pygame.display.set_caption("Playing" if is_playing else "Paused")
 
-            if event.type == pygame.KEYDOWN:            # Keyboard events
-                if event.key == pygame.K_SPACE:         # Spacebar toggles playing the game
-                    is_playing = not is_playing
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            is_running = False                      # Exit the game loop when the grid window is closed
 
-                if event.key == pygame.K_c:             # 'C' clears the screen
-                    positions = set()
-                    is_playing = False
+        if event.type == pygame.MOUSEBUTTONDOWN:    # Set or unset a tile at the press of any mouse button
+            x, y = pygame.mouse.get_pos()
+            col = x // TILE_SIZE
+            row = y // TILE_SIZE
+            pos = (col, row)
 
-                if event.key == pygame.K_g:
-                    positions = gen(random.randrange(2, 5) * GRID_WIDTH)
+            if pos in positions:
+                positions.remove(pos)
+            else:
+                positions.add(pos)
 
-        screen.fill(GRAY)
-        draw_grid(positions)
-        pygame.display.update()
+        if event.type == pygame.KEYDOWN:            # Keyboard events
+            if event.key == pygame.K_SPACE:         # Spacebar toggles playing the game
+                is_playing = not is_playing
+
+            if event.key == pygame.K_c:             # 'C' clears the screen
+                positions = set()
+                is_playing = False
+                count = 0
+
+            if event.key == pygame.K_g:
+                positions = gen(random.randrange(2, 5) * GRID_WIDTH)
+
+    screen.fill(GRAY)
+    draw_grid(positions)
+    pygame.display.update()
 
 
-    pygame.quit()
-
-
-"""
-Only run the main function if this file was explicitly run.
-This allows the file to be imported without executing the main function.
-"""
-
-if __name__ == "__main__":
-    main()
+pygame.quit()
 
