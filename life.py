@@ -58,7 +58,7 @@ def draw_grid(positions):
             pygame.draw.line(screen, BLACK, (col * TILE_SIZE, 0), (col * TILE_SIZE, HEIGHT))
 
 
-def adjust_grid(positions)
+def adjust_grid(positions):
     """
     Determine if a pos is active or inactive based on its neighbours
     
@@ -75,12 +75,12 @@ def adjust_grid(positions)
         neighbours = list(filter(Lambda x: x in positions, neighbours))
 
         if len(neighbours) in [2, 3]:                   # if an active cell has 2 or 3 neighbours, it remains active
-            new.positions.add(position)
-                                                        # implicit: if we don't add the pos to the new list, it goes inactive
+            new_positions.add(position)
+            # implicit: if we don't add the pos to the new list, it goes inactive
 
     for position in all_neighbours:                     # consider the position of all active neighbours
         neighbours = get_neighbours(position)
-        neighbours = list(filter(Lambda x: x in positions, neighbours))
+        neighbours = list(filter(lambda x: x in positions, neighbours))
 
         if len(neighbours) == 3:                        # if an inactive cell has 3 neighbours, it becomes active
             new_positions.add(position)
@@ -88,17 +88,20 @@ def adjust_grid(positions)
     return new_positions
 
 
-
-
 def get_neighbours(pos):
     """
-    Retrieve the number of neighbours that pos has
+    Retrieve the 8 neighbours of pos
 
     :param pos: current position
     :return: number of neighbours
     """
 
-    pass
+    x, y = pos
+    neighbours = []
+    for dx in [-1, 0, 1]:                               # consider displacement of x and y to the 8 surrounding pos
+        for dy in [-1, 0, 1]:
+            if not (dx == dy == 0):                     # skip the middle position
+                neighbours.append((x + dx, y + dy))     # active neighbours
 
 
 def main():
