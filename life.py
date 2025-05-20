@@ -11,6 +11,8 @@ initial conditions, the cells form various patterns throughout the course of the
 """
 
 import pygame
+import random
+
 pygame.init()
 
 # Colours and Grid Constants
@@ -46,21 +48,32 @@ def draw_grid(positions):
             pygame.draw.line(screen, BLACK, (col * TILE_SIZE, 0), (col * TILE_SIZE, HEIGHT))
 
 
+def gen(num):
+    """
+    Generates a random set of positions for the grid.
+    :param num: Number of positions to generate
+    :return: set of positions
+    """
+
+    return set([(random.randrange(0, GRID_HEIGHT), random.randrange(0, GRID_WIDTH)) for _ in range(num)])
+
+
 def main():
     """
     Main game loop
     """
 
     is_running = True
+    is_playing = False
     positions = set()
 
     while is_running:
-        clock.tick(FPS)
-
+        clock.tick(FPS)                                 # Limit the game loop by limiting the frame rate to FPS
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                is_running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
+                is_running = False                      # Exit the game loop when the grid window is closed
+
+            if event.type == pygame.MOUSEBUTTONDOWN:    # Set or unset a tile at the press of any mouse button
                 x, y = pygame.mouse.get_pos()
                 col = x // TILE_SIZE
                 row = y // TILE_SIZE
@@ -70,6 +83,17 @@ def main():
                     positions.remove(pos)
                 else:
                     positions.add(pos)
+
+            if event.type == pygame.KEYDOWN:            # Keyboard events
+                if event.key == pygame.K_SPACE:         # Spacebar toggles playing the game
+                    is_playing = not is_playing
+
+                if event.key == pygame.K_c:             # 'C' clears the screen
+                    positions = set()
+                    is_playing = False
+
+                if event.key == pygame.K_g:
+                    positions = gen(random.randrange(2, 5) * GRID_WIDTH)
 
         screen.fill(GRAY)
         draw_grid(positions)
