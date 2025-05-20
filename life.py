@@ -26,7 +26,7 @@ GRID_WIDTH = WIDTH // TILE_SIZE
 GRID_HEIGHT = HEIGHT // TILE_SIZE
 
 FPS = 60
-UPDATE_FREQ = 120                                       # Update every 2 clock cycles
+UPDATE_FREQ = 120                                   # Update every 2 clock cycles
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
@@ -73,20 +73,20 @@ def adjust_grid(positions):
     new_positions = set()
 
     for position in positions:
-        neighbours = get_neighbours(position)           # set eliminates duplicates
+        neighbours = get_neighbours(position)       # set eliminates duplicates
         all_neighbours.update(neighbours)
 
         neighbours = list(filter(lambda x: x in positions, neighbours))
 
-        if len(neighbours) in [2, 3]:                   # if an active cell has 2 or 3 neighbours, it remains active
+        if len(neighbours) in [2, 3]:               # if an active cell has 2 or 3 neighbours, it remains active
             new_positions.add(position)
-                                                        # implicit: if we don't add the pos to the new list, it goes inactive
+                                                    # implicit: if we don't add the pos to the new list, it goes inactive
 
-    for position in all_neighbours:                     # consider the position of all active neighbours
+    for position in all_neighbours:                 # consider the position of all active neighbours
         neighbours = get_neighbours(position)
         neighbours = list(filter(lambda x: x in positions, neighbours))
 
-        if len(neighbours) == 3:                        # if an inactive cell has 3 neighbours, it becomes active
+        if len(neighbours) == 3:                    # if an inactive cell has 3 neighbours, it becomes active
             new_positions.add(position)
 
     return new_positions
@@ -103,7 +103,7 @@ def get_neighbours(pos):
 
     x, y = pos
     neighbours = []
-    for dx in [-1, 0, 1]:                               # consider displacement of x and y to the 8 surrounding pos
+    for dx in [-1, 0, 1]:                           # consider displacement of x and y to the 8 surrounding pos
         if not (x + dx < 0 or x + x + dx > GRID_WIDTH):         # Check that x-pos is on the grid
             for dy in [-1, 0, 1]:
                 if not (y + dy <0 or y + dy > GRID_HEIGHT):     # Check that y-pos is on the grid
@@ -112,10 +112,13 @@ def get_neighbours(pos):
     return neighbours
 
 
+#
+# Main game loop
+#
 is_running = True                                   # Boolean switches us is_(verb)
 is_playing = False
 count = 0
-
+generation = 0
 positions = set()
 
 while is_running:
@@ -126,8 +129,9 @@ while is_running:
     if count >= UPDATE_FREQ:                        # When clock exceeds update frequency, redraw the board
         count = 0
         positions = adjust_grid(positions)
+        generation += 1
 
-    pygame.display.set_caption("Playing" if is_playing else "Paused")
+    pygame.display.set_caption(f"Playing, Generation = {generation}" if is_playing else f"Paused, Generation = {generation}")
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -155,6 +159,7 @@ while is_running:
 
             if event.key == pygame.K_g:
                 positions = gen(random.randrange(2, 5) * GRID_WIDTH)
+                generation = 0                      # Reset the generation counter
 
     screen.fill(GRAY)
     draw_grid(positions)
