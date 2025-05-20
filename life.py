@@ -64,6 +64,12 @@ def main():
                 x, y = pygame.mouse.get_pos()
                 col = x // TILE_SIZE
                 row = y // TILE_SIZE
+                pos = (col, row)
+
+                if pos in positions:
+                    positions.remove(pos)
+                else:
+                    positions.add(pos)
 
         screen.fill(GRAY)
         draw_grid(positions)
