@@ -32,12 +32,19 @@ def draw_grid(positions):
     """
     Draws the grid in the game window.
     (0,0) is the top left corner of the grid. X and Y increase as you go down and to the right.
+    positions are col, row
     """
+
+    for position in positions:
+        col, row = position
+        top_left = (col * TILE_SIZE, row * TILE_SIZE)
+        pygame.draw.rect(screen, YELLOW, (*top_left, TILE_SIZE, TILE_SIZE))     # *top_left unpacks the tuple
 
     for row in range(GRID_HEIGHT):
         pygame.draw.line(screen, BLACK, (0, row * TILE_SIZE), (WIDTH, row * TILE_SIZE))
     for col in range(GRID_WIDTH):
             pygame.draw.line(screen, BLACK, (col * TILE_SIZE, 0), (col * TILE_SIZE, HEIGHT))
+
 
 def main():
     """
@@ -46,12 +53,17 @@ def main():
 
     is_running = True
     positions = set()
+
     while is_running:
         clock.tick(FPS)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 is_running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = pygame.mouse.get_pos()
+                col = x // TILE_SIZE
+                row = y // TILE_SIZE
 
         screen.fill(GRAY)
         draw_grid(positions)
