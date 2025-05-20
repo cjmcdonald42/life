@@ -20,7 +20,7 @@ BLACK = (0, 0, 0)
 GRAY = (128, 128, 128)
 YELLOW = (255, 255, 0)
 
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 800, 800
 TILE_SIZE = 20
 GRID_WIDTH = WIDTH // TILE_SIZE
 GRID_HEIGHT = HEIGHT // TILE_SIZE
@@ -29,6 +29,16 @@ FPS = 60
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
+
+def gen(num):
+    """
+    Generates a random set of positions for the grid.
+    :param num: Number of positions to generate
+    :return: set of random positions, set eliminates duplicates
+    """
+
+    return set([(random.randrange(0, GRID_HEIGHT), random.randrange(0, GRID_WIDTH)) for _ in range(num)])
+
 
 def draw_grid(positions):
     """
@@ -48,14 +58,36 @@ def draw_grid(positions):
             pygame.draw.line(screen, BLACK, (col * TILE_SIZE, 0), (col * TILE_SIZE, HEIGHT))
 
 
-def gen(num):
+def adjust_grid(positions)
     """
-    Generates a random set of positions for the grid.
-    :param num: Number of positions to generate
-    :return: set of positions
+    Determine if a pos is active or inactive based on its neighbours
+    
+    :param positions: 
+    :return: 
+    """
+    all_neighbours = set()
+    new_positions = set()
+
+    for position in positions:
+        neighbours = get_neighbours(position)           # set eliminates duplicates
+        all_neighbours.update(neighbours)
+
+        neighbours = list(filter(Lambda x: x in positions, neighbours))
+
+        if len(neighbours) in [2, 3]:                   # if an active cell has 2 or 3 neighbours, it remains active
+            new.positions.add(position)
+                                                        # implicit: if we don't add the pos to the new list, it goes inactive
+
+
+def get_neighbours(pos):
+    """
+    Retrieve the number of neighbours that pos has
+
+    :param pos: current position
+    :return: number of neighbours
     """
 
-    return set([(random.randrange(0, GRID_HEIGHT), random.randrange(0, GRID_WIDTH)) for _ in range(num)])
+    pass
 
 
 def main():
