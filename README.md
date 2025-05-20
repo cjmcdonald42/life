@@ -1,8 +1,8 @@
      package:   life.py
       author:   Charles J McDonald «https://github.com/cjmcdonald42»
         date:   2025.05.20
-     version:   0.1
-    maturity:   inDev
+     version:   1.0
+    maturity:   Production
 
 # life
 The Game of Life was invented by Cambridge mathematician John Conway as a cellular automaton.
