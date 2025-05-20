@@ -28,8 +28,24 @@ FPS = 60
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
+def draw_grid(positions):
+    """
+    Draws the grid in the game window.
+    (0,0) is the top left corner of the grid. X and Y increase as you go down and to the right.
+    """
+
+    for row in range(GRID_HEIGHT):
+        pygame.draw.line(screen, BLACK, (0, row * TILE_SIZE), (WIDTH, row * TILE_SIZE))
+    for col in range(GRID_WIDTH):
+            pygame.draw.line(screen, BLACK, (col * TILE_SIZE, 0), (col * TILE_SIZE, HEIGHT))
+
 def main():
+    """
+    Main game loop
+    """
+
     is_running = True
+    positions = set()
     while is_running:
         clock.tick(FPS)
 
@@ -37,7 +53,13 @@ def main():
             if event.type == pygame.QUIT:
                 is_running = False
 
+        screen.fill(GRAY)
+        draw_grid(positions)
+        pygame.display.update()
+
+
     pygame.quit()
+
 
 """
 Only run the main function if this file was explicitly run.
