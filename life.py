@@ -165,6 +165,5 @@ while is_running:
     draw_grid(positions)
     pygame.display.update()
 
-
 pygame.quit()
 
