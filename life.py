@@ -1,7 +1,7 @@
 """
      package:   life.py
       author:   Charles J McDonald «https://github.com/cjmcdonald42»
-        date:   2025.05.20
+        date:   2025.05.22
 
 The Game of Life was invented by Cambridge mathematician John Conway as a cellular automaton.
 
@@ -34,6 +34,7 @@ clock = pygame.time.Clock()
 def gen(num):
     """
     Generates a random set of positions for the grid.
+
     :param num: Number of positions to generate
     :return: set of random positions, set eliminates duplicates
     """
@@ -66,9 +67,10 @@ def adjust_grid(positions):
     """
     Determine if a pos is active or inactive based on its neighbours
     
-    :param positions: 
+    :param positions: set of positions to draw
     :return: 
     """
+
     all_neighbours = set()
     new_positions = set()
 
@@ -149,7 +151,7 @@ while is_running:
                 positions.add(pos)
 
         if event.type == pygame.KEYDOWN:            # Keyboard events
-            if event.key == pygame.K_SPACE:         # Spacebar toggles playing the game
+            if event.key == pygame.K_SPACE:         # Space bar toggles playing the game
                 is_playing = not is_playing
 
             if event.key == pygame.K_c:             # 'C' clears the screen
@@ -166,4 +168,3 @@ while is_running:
     pygame.display.update()
 
 pygame.quit()
-
