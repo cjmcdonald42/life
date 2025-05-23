@@ -83,7 +83,6 @@ def adjust_grid(positions):
         if len(neighbours) in [2, 3]:               # if an active cell has 2 or 3 neighbours, it remains active
             new_positions.add(position)
                                                     # implicit: if we don't add the pos to the new list, it goes inactive
-
     for position in all_neighbours:                 # consider the position of all active neighbours
         neighbours = get_neighbours(position)
         neighbours = list(filter(lambda x: x in positions, neighbours))
